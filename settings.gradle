@@ -1,0 +1,4 @@
+rootProject.name = 'bootcamp-project-david-acuna'
+
+include 'bootcamp-project-kingdom'
+include 'bootcamp-project-pretender'

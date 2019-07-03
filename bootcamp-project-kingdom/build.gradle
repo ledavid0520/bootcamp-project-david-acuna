@@ -1,0 +1,76 @@
+buildscript {
+	ext { 
+		springBootVersion = '2.1.4.RELEASE' 
+		verifierVersion = '2.1.1.RELEASE'
+	}
+	repositories { mavenCentral() }
+	dependencies { 
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+		classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:${verifierVersion}"
+	}
+}
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'spring-cloud-contract' //takes care of generating the tests for us:
+
+
+group 'com.globant.bootcamp'
+version = '0.0.1-SNAPSHOT'
+bootJar {
+	baseName = 'bootcamp-project-kingdom'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories { 
+	mavenCentral() 
+	jcenter()
+}
+
+dependencies {
+	//Common
+	compile('org.springframework.boot:spring-boot-starter-web')	
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	//Contract
+	testCompile('org.springframework.cloud:spring-cloud-starter-contract-verifier')
+	//JPA dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	// postgresql
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+	// h2database
+	testCompile group: 'com.h2database', name: 'h2', version: '1.3.148'
+	runtimeOnly 'com.h2database:h2'
+	//Mockito
+	testImplementation 'org.mockito:mockito-core:2.7.22'
+	//swagger
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+	//Actuator
+	compile("org.springframework.boot:spring-boot-starter-actuator")
+	//JUnit
+	testCompileOnly 'junit:junit:4.12'
+	testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
+	//Security
+	compile("org.springframework.boot:spring-boot-starter-security")
+	testCompile("org.springframework.security:spring-security-test")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1"
+	}
+}
+
+contracts {
+	//packageWithBaseClasses = 'com.globant.project'
+	baseClassMappings {
+		baseClassMapping("com.globant.project.*", "com.globant.project.BaseClass")
+	}
+}
