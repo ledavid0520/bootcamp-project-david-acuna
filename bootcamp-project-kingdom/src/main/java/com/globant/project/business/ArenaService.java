@@ -1,5 +1,6 @@
 package com.globant.project.business;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,9 @@ public class ArenaService {
 	/**
 	 * Shows Arena information so far
 	 * 
+	 * @param arena
+	 * 		arena
+	 * 
 	 * @return results
 	 * 		arena info
 	 */
@@ -61,6 +65,8 @@ public class ArenaService {
 	 * Validates if player has more attempts in the current game,otherwise generates new game int,
 	 * Generates the value of the current attempt considering the max level of the pretender of his kingdom,
 	 * And creates a new result from the collected information of the movement 
+	 * @param arena
+	 * 		arena
 	 * 
 	 * @return resultPojo
 	 * 		movement info
@@ -97,6 +103,9 @@ public class ArenaService {
 	/**
 	 * Checks if current user has a Platinum Pretender in his kingdom 
 	 * 
+	 * @param kingdom
+	 * 		player kingdom
+	 * 
 	 * @return true if user has a Platinum Pretender, false otherwise
 	 */
 	public Boolean getBestPretender(Kingdom kingdom) {
@@ -115,10 +124,13 @@ public class ArenaService {
 	 * Lists the winner per game,
 	 * And gets the arena winner
 	 * 
+	 * @param arena
+	 * 		arena
+	 * 
 	 * @return arenaResultPojo
 	 * 		info about the arena results
 	 */
-	public ArenaWinnersPojo endArena() {
+	public ArenaWinnersPojo endArena(Arena arena) {
 		List<TableResultPojo> arenaResults = resultRepository.generateFinalTable();
 		
 		List<TableResultPojo> winnersByGame = arenaResults.stream()
@@ -134,7 +146,19 @@ public class ArenaService {
 						.entrySet().stream().max(Map.Entry.comparingByValue())
 						.map(Map.Entry::getKey).orElse(null);	
 		
+		endCurrentArena(arena);
 		return new ArenaWinnersPojo(arenaResults, winnersByGame, PlayerPojo.getPlayerPojo(playerRepository.getById(winnerId)));
+	}
+
+	/**
+	 * Ends arena.
+	 * 
+	 * @param arena
+	 * 		arena
+	 */
+	private void endCurrentArena(Arena arena) {
+		arena.setResults(new ArrayList<Result>());	
+		resultRepository.deleteAll();
 	}	
 
 }

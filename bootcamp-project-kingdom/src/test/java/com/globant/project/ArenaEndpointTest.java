@@ -75,6 +75,19 @@ public class ArenaEndpointTest {
 		
 		this.mvc.perform(request).andExpect(status().isOk()).andReturn();			
 	}
+	
+	@Test
+	@WithMockUser(value="david",roles="USER")
+	public void endArenaTest() throws Exception{	
+		mvc = MockMvcBuilders
+				.webAppContextSetup(context)
+				.apply(springSecurity())
+				.build();
+		
+		MockHttpServletRequestBuilder request = get("/arena/endArena");
+		
+		this.mvc.perform(request).andExpect(status().isOk()).andReturn();			
+	}
 
 	@Test
 	public void getArenaResultsContentTest() throws Exception{

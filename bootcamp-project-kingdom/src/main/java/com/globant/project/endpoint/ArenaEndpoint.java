@@ -80,7 +80,7 @@ public class ArenaEndpoint {
     @GetMapping(value="/endArena", produces = "application/json")
     public ResponseEntity<ArenaWinnersPojo> endArena() {        
     	try {
-    		return ResponseEntity.status(HttpStatus.OK).body(arenaService.endArena());
+    		return ResponseEntity.status(HttpStatus.OK).body(arenaService.endArena(arena));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

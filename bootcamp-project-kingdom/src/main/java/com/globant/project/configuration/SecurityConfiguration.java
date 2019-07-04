@@ -28,15 +28,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter  {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeRequests()
-                	.antMatchers(HttpMethod.GET, "/kingdoms")
-                		.hasRole("ADMIN")    
+                .authorizeRequests()	                
+                	.antMatchers(HttpMethod.GET, "/kingdoms", "/arena/endArena")
+                		.hasRole("ADMIN")
             		.antMatchers(HttpMethod.PATCH)
-            			.permitAll()	
+	    				.permitAll()
+            		//All requests require authentication
             		.anyRequest()
             			.authenticated()               
                 .and()
-                .httpBasic();        
+                //Activate http basic protection
+                .httpBasic();  
+        
+        //Disable protection against CSRF attacks
         httpSecurity
         	.csrf()
         	.disable();

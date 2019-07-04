@@ -87,6 +87,9 @@ private static final Logger log = LoggerFactory.getLogger(HouseEndpoint.class);
 					new RequestEntity<>(null, headers,HttpMethod.GET, new URI(url));
 			
 			return restTemplate.exchange(requestEntity, ResultPojo.class);
+		} catch (HttpClientErrorException e) {
+			log.error(e.getMessage(), e);
+			return ResponseEntity.status(e.getStatusCode()).build();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -110,6 +113,9 @@ private static final Logger log = LoggerFactory.getLogger(HouseEndpoint.class);
 					new RequestEntity<>(null, headers,HttpMethod.GET, new URI(url));
 			
 			return restTemplate.exchange(requestEntity, ArenaWinnersPojo.class);
+		} catch (HttpClientErrorException e) {
+			log.error(e.getMessage(), e);
+			return ResponseEntity.status(e.getStatusCode()).build();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
