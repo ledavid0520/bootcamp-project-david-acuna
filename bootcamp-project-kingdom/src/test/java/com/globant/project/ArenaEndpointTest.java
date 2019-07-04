@@ -77,7 +77,7 @@ public class ArenaEndpointTest {
 	}
 	
 	@Test
-	@WithMockUser(value="david",roles="USER")
+	@WithMockUser(value="admin",roles="ADMIN")
 	public void endArenaTest() throws Exception{	
 		mvc = MockMvcBuilders
 				.webAppContextSetup(context)
@@ -87,6 +87,19 @@ public class ArenaEndpointTest {
 		MockHttpServletRequestBuilder request = get("/arena/endArena");
 		
 		this.mvc.perform(request).andExpect(status().isOk()).andReturn();			
+	}
+	
+	@Test
+	@WithMockUser(value="david",roles="USER")
+	public void endArenaNotAdminTest() throws Exception{	
+		mvc = MockMvcBuilders
+				.webAppContextSetup(context)
+				.apply(springSecurity())
+				.build();
+		
+		MockHttpServletRequestBuilder request = get("/arena/endArena");
+		
+		this.mvc.perform(request).andExpect(status().isForbidden()).andReturn();			
 	}
 
 	@Test
